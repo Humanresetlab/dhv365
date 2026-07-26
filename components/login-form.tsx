@@ -36,24 +36,25 @@ export function LoginForm() {
         return;
       }
 
-      const { error: loginError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const {
+        data: { user },
+        error: loginError,
+      } = await supabase.auth.signInWithPassword({ email, password });
 
       if (loginError) throw loginError;
 
       await fetch("/api/auth/login-alert", {
         method: "POST",
-    }).catch(() => undefined);
+      }).catch(() => undefined);
 
-      router.replace("/portal");
+      const role = user?.app_metadata?.role;
+      router.replace(role === "admin" ? "/admin" : "/portal");
       router.refresh();
     } catch {
       setError(
         mode === "login"
           ? "Inloggen is niet gelukt. Controleer uw gegevens."
-          : "De herstelmail kon niet worden aangevraagd."
+          : "De herstelmail kon niet worden aangevraagd.",
       );
     } finally {
       setLoading(false);
@@ -66,7 +67,7 @@ export function LoginForm() {
         <h1 className={styles.title}>{mode === "login" ? "Inloggen" : "Wachtwoord herstellen"}</h1>
         {message && <p className={styles.success}>{message}</p>}
         {error && <p className={styles.error}>{error}</p>}
-        
+
         <div className={styles.group}>
           <label htmlFor="email">E-mailadres</label>
           <input type="email" id="email" name="email" required disabled={loading} className={styles.input} />
@@ -83,7 +84,11 @@ export function LoginForm() {
           {loading ? "Laden..." : mode === "login" ? "Inloggen" : "Herstelmail aanvragen"}
         </button>
 
-        <button type="button" onClick={() => setMode(mode === "login" ? "reset" : "login")} className={styles.switchButton}>
+        <button
+          type="button"
+          onClick={() => setMode(mode === "login" ? "reset" : "login")}
+          className={styles.switchButton}
+        >
           {mode === "login" ? "Wachtwoord vergeten?" : "Terug naar inloggen"}
         </button>
       </form>
