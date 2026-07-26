@@ -14,8 +14,25 @@ export const metadata: Metadata = {
 
 export default async function LoginPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) redirect("/portal");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return <><Header/><main><div className="wrap"><section className={styles.shell}><LoginForm /></section></div></main><Footer/></>;
+  if (user) {
+    redirect(user.app_metadata?.role === "admin" ? "/admin" : "/portal");
+  }
+
+  return (
+    <>
+      <Header />
+      <main>
+        <div className="wrap">
+          <section className={styles.shell}>
+            <LoginForm />
+          </section>
+        </div>
+      </main>
+      <Footer />
+    </>
+  );
 }
