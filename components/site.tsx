@@ -13,7 +13,7 @@ export function Header() {
           <Link href="/#werkwijze">Werkwijze</Link>
           <Link href="/veiligheid">Veiligheid</Link>
           <Link href="/werkgebied">Werkgebied</Link>
-          <Link href="/inlog" className={`button ${styles.loginLink}`}>
+          <Link href="/inloggen" className={`button ${styles.loginLink}`}>
             Inloggen
           </Link>
           <Link href="/opdracht" className={`button ${styles.primaryAction}`}>
