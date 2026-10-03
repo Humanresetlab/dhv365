@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/inlog",
+        destination: "/inloggen",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [{ type: "host", value: "www.dhv365.nl" }],
         destination: "https://dhv365.nl/:path*",
